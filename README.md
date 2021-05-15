@@ -1,7 +1,8 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+## About
+This project is a wraper of all features learned in react-example3, 2 and 1. its a food order  that you can add your meals in to a cart, and later you can also remove.
 ## Available Scripts
 
 In the project directory, you can run:
