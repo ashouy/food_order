@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import Modal from "../UI/modal/Modal";
 import classes from "./Cart.module.css";
 import CartContext from "../store/cart-context";
@@ -7,6 +7,8 @@ import Checkout from "./Checkout";
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const ctx = useContext(CartContext);
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
   const hasItems = ctx.items.length > 0;
@@ -19,6 +21,22 @@ const Cart = (props) => {
   };
   const orderHandler = () => {
     setIsCheckout(true);
+  };
+  const submitorderHandler = async (userData) => {
+    setIsSubmitting(true);
+    await fetch(
+      "https://react-examples-c90fa-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderedItems: ctx.items,
+        }),
+      }
+    );
+    setIsSubmitting(false);
+    setDidSubmit(true);
+    ctx.clearCart()
   };
 
   const cartItens = (
@@ -48,15 +66,29 @@ const Cart = (props) => {
       )}
     </div>
   );
-  return (
-    <Modal onClose={props.onClose}>
+
+  const cartModalContent = (
+    <Fragment>
       {cartItens}
       <div className={classes.total}>
         <span>total amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onClose}/>}
+      {isCheckout && (
+        <Checkout onConfirm={submitorderHandler} onCancel={props.onClose} />
+      )}
       {!isCheckout && modalActions}
+    </Fragment>
+  );
+
+  const submittingModalContent = <p>sending... order data</p>;
+  const didSubmitModalContent = <p>Successfully sent order</p>;
+
+  return (
+    <Modal onClose={props.onClose}>
+      {!isSubmitting && !didSubmit && cartModalContent}
+      {isSubmitting && submittingModalContent}
+      {!isSubmitting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
