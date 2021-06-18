@@ -2,7 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## About
-This project is a wraper of all features learned in react-example3, 2 and 1. its a food order  that you can add your meals in to a cart, and later you can also remove.
+This react example its a food order app where you can add some food to you cart and place info about where will be delivered.
+
+The project use firebase to fetch the available meals and to store info
+about where address.
 
 ![food_order](https://media.giphy.com/media/HMC9YO51LXD4DkmAYx/giphy.gif)
 
